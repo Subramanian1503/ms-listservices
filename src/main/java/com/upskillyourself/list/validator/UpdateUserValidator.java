@@ -2,7 +2,6 @@ package com.upskillyourself.list.validator;
 
 import com.upskillyourself.list.constants.ErrorCode;
 import com.upskillyourself.list.constants.ListConstants;
-import com.upskillyourself.list.constants.LogConstants;
 import com.upskillyourself.list.core.exception.ValidationException;
 import com.upskillyourself.list.core.model.InputModel;
 import com.upskillyourself.list.core.validation.ValidatorComponent;
@@ -14,38 +13,37 @@ import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
-public class CreateUserValidator implements ValidatorComponent {
+public class UpdateUserValidator implements ValidatorComponent {
 
     private final ListHelper listHelper;
 
-    public CreateUserValidator(ListHelper listHelper) {
+    public UpdateUserValidator(ListHelper listHelper) {
         this.listHelper = listHelper;
     }
 
     @Override
     public void preProcess(InputModel inputModel) {
         UserRequest request = (UserRequest) inputModel;
-        // check the userName
-        ListUtil.validate(request.getName(),
-                ErrorCode.ERROR_CODE_INVALID_USER_NAME,
-                "Invalid User Name",
-                LogConstants.ERROR_VALIDATION_CREATE_USER);
         // check the profile picture link
-        ListUtil.validateWithRegex(request.getProfilePicture(),
+        ListUtil.validateRequest(request.getProfilePicture(),
+                ListConstants.REGEX_PROFILE_PICTURE_IMAGE,
                 ErrorCode.ERROR_CODE_INVALID_PROFILE_PICTURE,
-                "Invalid Profile Picture", ListConstants.REGEX_PROFILE_PICTURE_IMAGE);
+                "Invalid Profile Picture");
         // check the emailId
-        ListUtil.validateWithRegex(request.getEmailId(),
+        ListUtil.validateRequest(request.getEmailId(),
+                ListConstants.REGEX_EMAIL,
                 ErrorCode.ERROR_CODE_INVALID_EMAIL_ID,
-                "Invalid EmailId", ListConstants.REGEX_EMAIL);
+                "Invalid EmailId");
         // check the phoneNumber
-        ListUtil.validateWithRegex(request.getPhoneNumber(),
+        ListUtil.validateRequest(request.getPhoneNumber(),
+                ListConstants.REGEX_PHONE_NUMBER,
                 ErrorCode.ERROR_CODE_INVALID_PHONE_NUMBER,
-                "Invalid PhoneNumber", ListConstants.REGEX_PHONE_NUMBER);
+                "Invalid PhoneNumber");
         // check whether already user registered with the mailId
-        if (this.listHelper.checkWhetherEmailIdExists(request))
-            throw new ValidationException(ErrorCode.ERROR_CODE_TODO_USER + ErrorCode.ERROR_CODE_USER_ALREADY_EXISTS,
-                    "User Already Exists");
+        boolean isEmailIdAlreadyExists = this.listHelper.checkWhetherEmailIdExists(request);
+        if (!isEmailIdAlreadyExists)
+            throw new ValidationException(ErrorCode.ERROR_CODE_TODO_USER + ErrorCode.ERROR_CODE_USER_NOT_EXISTS,
+                    "User Not Exists");
     }
 
 }
