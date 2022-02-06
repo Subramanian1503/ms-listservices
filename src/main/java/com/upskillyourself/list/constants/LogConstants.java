@@ -15,5 +15,6 @@ public final class LogConstants {
     // INFO
     public static final String INFO_CREATE_USER_SUCCESS = "User Created";
     public static final String INFO_FIND_USER_SUCCESS = "Find User Success";
+    public static final String INFO_DELETE_USER_SUCCESS = "Delete User Success";
     public static final String INFO_CREATE_USER_REQUEST_CONVERT_TO_ENTITY = "Converted Entity value from request will be {}";
 }

@@ -4,6 +4,7 @@ import com.upskillyourself.list.constants.LogConstants;
 import com.upskillyourself.list.exchange.request.UserRequest;
 import com.upskillyourself.list.exchange.response.UserResponse;
 import com.upskillyourself.list.service.CreateUserService;
+import com.upskillyourself.list.service.DeleteUserService;
 import com.upskillyourself.list.service.FindUserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,14 @@ public class UserController {
 
     private final FindUserService findUserService;
 
-    public UserController(CreateUserService createUserService, FindUserService findUserService) {
+    private final DeleteUserService deleteUserService;
+
+    public UserController(CreateUserService createUserService,
+                          FindUserService findUserService,
+                          DeleteUserService deleteUserService) {
         this.createUserService = createUserService;
         this.findUserService = findUserService;
+        this.deleteUserService = deleteUserService;
     }
 
     @PostMapping("/user")
@@ -34,7 +40,7 @@ public class UserController {
 
     @GetMapping("/user/{emailId}")
     public ResponseEntity<UserResponse> findUserByEmailId(
-            @PathVariable(required = true, value = "emailId") String emailId) {
+            @PathVariable(required = true) String emailId) {
         String methodName = "FindUserByEmailId";
         log.trace(LogConstants.TRACE_METHOD_ENTRY, methodName);
         UserRequest request = new UserRequest();
@@ -42,5 +48,17 @@ public class UserController {
         UserResponse response = this.findUserService.process(request);
         log.trace(LogConstants.TRACE_METHOD_EXIT, methodName);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user/{emailId}")
+    public ResponseEntity<UserResponse> deleteUserByEmailId(
+            @PathVariable(required = true) String emailId) {
+        String methodName = "DeleteUserByEmailId";
+        log.trace(LogConstants.TRACE_METHOD_ENTRY, methodName);
+        UserRequest request = new UserRequest();
+        request.setEmailId(emailId);
+        UserResponse response = this.deleteUserService.process(request);
+        log.trace(LogConstants.TRACE_METHOD_EXIT, methodName);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 }

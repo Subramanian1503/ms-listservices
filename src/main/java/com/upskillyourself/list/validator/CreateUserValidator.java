@@ -6,6 +6,7 @@ import com.upskillyourself.list.core.exception.ValidationException;
 import com.upskillyourself.list.core.model.InputModel;
 import com.upskillyourself.list.core.validation.ValidatorComponent;
 import com.upskillyourself.list.exchange.request.UserRequest;
+import com.upskillyourself.list.helper.ListHelper;
 import com.upskillyourself.list.repository.UserRepository;
 import com.upskillyourself.list.utility.ListUtil;
 import lombok.extern.log4j.Log4j2;
@@ -17,8 +18,11 @@ public class CreateUserValidator implements ValidatorComponent {
 
     private final UserRepository userRepository;
 
-    public CreateUserValidator(UserRepository userRepository) {
+    private final ListHelper listHelper;
+
+    public CreateUserValidator(UserRepository userRepository, ListHelper listHelper) {
         this.userRepository = userRepository;
+        this.listHelper = listHelper;
     }
 
     @Override
@@ -41,13 +45,9 @@ public class CreateUserValidator implements ValidatorComponent {
                 ErrorCode.ERROR_CODE_INVALID_PHONE_NUMBER,
                 "Invalid PhoneNumber", ListConstants.REGEX_PHONE_NUMBER);
         // check whether already user registered with the mailId
-        if (checkWhetherEmailIdExists(request))
+        if (this.listHelper.checkWhetherEmailIdExists(request))
             throw new ValidationException(ErrorCode.ERROR_CODE_TODO_USER + ErrorCode.ERROR_CODE_USER_ALREADY_EXISTS,
                     "User Already Exists");
-    }
-
-    private boolean checkWhetherEmailIdExists(UserRequest request) {
-        return userRepository.findUserByEmailId(request.getEmailId()).isPresent();
     }
 
 }
