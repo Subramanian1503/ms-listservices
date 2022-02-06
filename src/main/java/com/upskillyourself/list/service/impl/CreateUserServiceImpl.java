@@ -37,7 +37,7 @@ public class CreateUserServiceImpl implements CreateUserService {
     @Override
     public UserResponse process(UserRequest input) {
         User userEntity = input.convertRequestToEntity();
-        log.info(LogConstants.INFO_CREATE_USER_REQUEST_CONVERT_TO_ENTITY, userEntity.toString());
+        log.info(LogConstants.INFO_USER_REQUEST_CONVERT_TO_ENTITY, userEntity.toString());
         userEntity = this.userRepository.save(userEntity);
         log.info(LogConstants.INFO_CREATE_USER_SUCCESS);
         return userEntity.convertEntityToResponse();

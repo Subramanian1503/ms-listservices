@@ -6,6 +6,7 @@ import com.upskillyourself.list.exchange.response.UserResponse;
 import com.upskillyourself.list.service.CreateUserService;
 import com.upskillyourself.list.service.DeleteUserService;
 import com.upskillyourself.list.service.FindUserService;
+import com.upskillyourself.list.service.UpdateUserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,16 @@ public class UserController {
 
     private final DeleteUserService deleteUserService;
 
+    private final UpdateUserService updateUserService;
+
     public UserController(CreateUserService createUserService,
                           FindUserService findUserService,
-                          DeleteUserService deleteUserService) {
+                          DeleteUserService deleteUserService,
+                          UpdateUserService updateUserService) {
         this.createUserService = createUserService;
         this.findUserService = findUserService;
         this.deleteUserService = deleteUserService;
+        this.updateUserService = updateUserService;
     }
 
     @PostMapping("/user")
@@ -60,5 +65,16 @@ public class UserController {
         UserResponse response = this.deleteUserService.process(request);
         log.trace(LogConstants.TRACE_METHOD_EXIT, methodName);
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/user/{emailId}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable(required = true) String emailId,
+                                                   @RequestBody(required = true) UserRequest request) {
+        String methodName = "UpdateUser";
+        log.trace(LogConstants.TRACE_METHOD_ENTRY, methodName);
+        request.setEmailId(emailId);
+        UserResponse response = this.updateUserService.process(request);
+        log.trace(LogConstants.TRACE_METHOD_EXIT, methodName);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
