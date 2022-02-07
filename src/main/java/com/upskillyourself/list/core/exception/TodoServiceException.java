@@ -1,3 +1,20 @@
+/*
+ * *
+ *  * *******************************************************************************
+ *  * Copyright ©2022.
+ *   Upskillyourself - All rights reserved.
+ *  *
+ *  * All information contained herein is, and remains the property of Upskillyourself.
+ *  * Upskillyourself including, without limitation, all software and other elements thereof,
+ *  * are owned or controlled exclusively by Upskillyourself and protected by copyright, patent
+ *  * and other laws. Use without permission is prohibited.
+ *  * Unauthorized copying of this file, via any medium is strictly prohibited
+ *  *
+ *  * For further information contact Upskillyourself at info@Upskillyourself.com.
+ *  * *******************************************************************************
+ *
+ */
+
 package com.upskillyourself.list.core.exception;
 
 import lombok.Getter;
@@ -6,7 +23,9 @@ public class TodoServiceException extends RuntimeException {
 
     private static final long serialVersionUID = -3736284633578999598L;
 
-    /** Constant <code>ERR_NONE=0</code> */
+    /**
+     * Constant <code>ERR_NONE=0</code>
+     */
     public static final String ERR_NONE = "CORE_0";
 
     /** Constant <code>ERR_UNKNOWN=1</code> */
@@ -40,7 +59,7 @@ public class TodoServiceException extends RuntimeException {
     }
 
     public TodoServiceException(String errorCode, String errorMessage, Throwable throwable, int httpStatusCode,
-                              Object... parameters) {
+                                Object... parameters) {
         super(errorMessage, throwable);
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
